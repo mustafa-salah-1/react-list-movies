@@ -1,0 +1,68 @@
+export default function App() {
+  return (
+    <div className="app">
+      <Navbar>
+        <Logo />
+        <Search />
+        <Result />
+      </Navbar>
+
+      <Main>
+        <ListMovies />
+        <ListMovies />
+      </Main>
+    </div>
+  );
+}
+
+function Main({ children }) {
+  return <main>{children}</main>;
+}
+function ListMovies() {
+  return (
+    <div className="movie">
+      <button>&times;</button>
+      <div className="list">
+        <div className="item">
+          <div>
+            <img src="logo512.png" width={55} alt="test" />
+          </div>
+          <div>
+            <h2>name</h2>
+            <p>des</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Navbar({ children }) {
+  return <nav> {children}</nav>;
+}
+function Logo() {
+  return (
+    <div>
+      <img src="logo192.png" width={35} alt="logo" />
+      <span>Movies</span>
+    </div>
+  );
+}
+
+function Search() {
+  return (
+    <div>
+      <input type="text" placeholder="Search..." />
+    </div>
+  );
+}
+
+function Result() {
+  return (
+    <div>
+      <p>
+        Result <strong>X</strong>
+      </p>
+    </div>
+  );
+}
