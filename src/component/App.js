@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function App() {
   return (
     <div className="app">
@@ -8,8 +10,14 @@ export default function App() {
       </Navbar>
 
       <Main>
-        <ListMovies />
-        <ListMovies />
+        <Box>
+          <MovieList />
+        </Box>
+
+        <Box>
+          <WatchedSummary />
+          <WatchedMoviesList />
+        </Box>
       </Main>
     </div>
   );
@@ -18,20 +26,58 @@ export default function App() {
 function Main({ children }) {
   return <main>{children}</main>;
 }
-function ListMovies() {
+function Box({ children }) {
+  const [isOpen, setIsOpen] = useState(true);
   return (
     <div className="movie">
-      <button>&times;</button>
-      <div className="list">
-        <div className="item">
-          <div>
-            <img src="logo512.png" width={55} alt="test" />
-          </div>
-          <div>
-            <h2>name</h2>
-            <p>des</p>
-          </div>
-        </div>
+      <div className="button">
+        <button onClick={() => setIsOpen((isOpen) => !isOpen)}>
+          {isOpen ? "-" : "+"}
+        </button>
+      </div>
+      {isOpen && children}
+    </div>
+  );
+}
+function MovieList() {
+  return (
+    <div className="list">
+      <ListItem />
+    </div>
+  );
+}
+function ListItem() {
+  return (
+    <div className="item">
+      <div>
+        <img src="logo512.png" width={55} alt="test" />
+      </div>
+      <div>
+        <h2>name</h2>
+        <p>des</p>
+      </div>
+    </div>
+  );
+}
+function WatchedSummary() {
+  return <div>summary</div>;
+}
+function WatchedMoviesList() {
+  return (
+    <div className="list">
+      <WatchedItem />
+    </div>
+  );
+}
+function WatchedItem() {
+  return (
+    <div className="item">
+      <div>
+        <img src="logo512.png" width={55} alt="test" />
+      </div>
+      <div>
+        <h2>name</h2>
+        <p>des</p>
       </div>
     </div>
   );
