@@ -7,15 +7,16 @@ const styleStar = {
 const style = {
   padding: "10px",
   display: "flex",
+  flexDirection: "column",
   justifyContent: "center",
   color: "white",
   alignItems: "center",
-  gap: "5px",
 };
 export default function StarRating({
   starLength = 5,
   defaultRate = 0,
   color = "#fff",
+  removeNumberStars = false,
 }) {
   const [rate, setRate] = useState(defaultRate);
   const [rateHover, setRateHover] = useState(rate);
@@ -43,7 +44,11 @@ export default function StarRating({
           />
         ))}
       </div>
-      <div style={{ color: color }}>{rateHover}</div>
+      {!removeNumberStars && (
+        <div style={{ color: color }}>
+          {rate} / {starLength}
+        </div>
+      )}
     </div>
   );
 }
