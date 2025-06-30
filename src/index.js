@@ -2,10 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./component/App";
+import StarRating from "./component/StarRating";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+    <StarRating defaultRate={6} starLength={10} />
   </React.StrictMode>
 );
