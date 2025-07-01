@@ -68,7 +68,8 @@ main .movie {
 }
 main .movie .button {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
+  align-items: center;
   padding-block: 5px;
 }
 main .movie button {

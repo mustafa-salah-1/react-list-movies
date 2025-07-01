@@ -2,10 +2,15 @@ import { useEffect, useState } from "react";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  // const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [showMovie, setShowMovie] = useState(null);
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  function handleShowMovie(movie) {
+    setShowMovie(() => movie);
+  }
 
   useEffect(
     function () {
@@ -52,13 +57,21 @@ export default function App() {
       <Main>
         <Box>
           {isLoading && <Loader />}
-          {!isLoading && !error && movies && <MovieList movies={movies} />}
+          {!isLoading && !error && movies && (
+            <MovieList movies={movies} handleShowMovie={handleShowMovie} />
+          )}
           {error && <ErrorMessage error={error} />}
         </Box>
 
-        <Box>
-          <WatchedSummary />
-          <WatchedMoviesList />
+        <Box movie={showMovie} handleShowMovie={handleShowMovie}>
+          {showMovie ? (
+            <ShowMovie movie={showMovie} handleShowMovie={handleShowMovie} />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMoviesList />
+            </>
+          )}
         </Box>
       </Main>
     </div>
@@ -68,11 +81,37 @@ export default function App() {
 function Main({ children }) {
   return <main>{children}</main>;
 }
-function Box({ children }) {
+
+function ShowMovie({ movie }) {
+  console.log(movie);
+  return (
+    <div>
+      <div style={{ display: "flex", gap: "5px" }}>
+        <img
+          src={movie.Poster}
+          style={{ borderRadius: "10px" }}
+          width={100}
+          alt={movie.Title}
+        />
+        <div>
+          <h3>{movie.Title}</h3>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Box({ children, movie = null, handleShowMovie = null }) {
   const [isOpen, setIsOpen] = useState(true);
   return (
     <div className="movie">
       <div className="button">
+        <div>
+          {movie && isOpen && (
+            <button onClick={() => handleShowMovie(null)}>&larr;</button>
+          )}
+        </div>
+
         <button onClick={() => setIsOpen((isOpen) => !isOpen)}>
           {isOpen ? "-" : "+"}
         </button>
@@ -81,18 +120,22 @@ function Box({ children }) {
     </div>
   );
 }
-function MovieList({ movies }) {
+function MovieList({ movies, handleShowMovie }) {
   return (
     <div className="list">
       {movies.map((movie) => (
-        <ListItem key={movie.imdbID} movie={movie} />
+        <ListItem
+          key={movie.imdbID}
+          movie={movie}
+          handleShowMovie={handleShowMovie}
+        />
       ))}
     </div>
   );
 }
-function ListItem({ movie }) {
+function ListItem({ movie, handleShowMovie }) {
   return (
-    <div className="item">
+    <div className="item" onClick={() => handleShowMovie(movie)}>
       <div>
         <img src={movie.Poster} width={55} alt={movie.Title} />
       </div>
@@ -103,8 +146,13 @@ function ListItem({ movie }) {
     </div>
   );
 }
-function WatchedSummary() {
-  return <div>summary</div>;
+function WatchedSummary({ watched }) {
+  return (
+    <div>
+      <h3>Movies you watched</h3>
+      <div>#️⃣ {watched.length} movies ⭐ 0 ⌛ 0 min</div>
+    </div>
+  );
 }
 function WatchedMoviesList() {
   return (
