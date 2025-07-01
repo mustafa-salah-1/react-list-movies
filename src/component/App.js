@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"; 
 import ShowMovie from "./ShowMovie";
 import Loader from "./Loader";
+import Navbar from "./Navbar/Navbar";
+import Search from "./Navbar/Search";
+import Result from "./Navbar/Result";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
@@ -221,41 +224,4 @@ function ErrorMessage({ error }) {
   );
 }
 
-function Navbar({ children }) {
-  return (
-    <nav>
-      <Logo /> {children}
-    </nav>
-  );
-}
 
-function Logo() {
-  return (
-    <div>
-      <img src="logo192.png" width={35} alt="logo" />
-      <span>Movies</span>
-    </div>
-  );
-}
-
-function Search({ onEvent }) {
-  return (
-    <div>
-      <input
-        type="text"
-        onChange={(e) => onEvent(() => e.target.value)}
-        placeholder="Search..."
-      />
-    </div>
-  );
-}
-
-function Result({ movies }) {
-  return (
-    <div>
-      <p>
-        Result <strong>{movies && movies.length}</strong>
-      </p>
-    </div>
-  );
-}
