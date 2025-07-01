@@ -24,7 +24,7 @@ export default function StarRating({
     setRate(rating);
   }
   function handleHoverRating(ratingHover) {
-    setRateHover(ratingHover);
+    setRateHover(ratingHover); 
   }
   function handleLeaveRating(ratingLeave) {
     setRateHover(ratingLeave);
@@ -43,12 +43,12 @@ export default function StarRating({
             fullHover={rateHover >= i + 1}
           />
         ))}
+        {!removeNumberStars && (
+          <div style={{ color: color, paddingInline: "5px", width: "20px" }}>
+            {rate}
+          </div>
+        )}
       </div>
-      {!removeNumberStars && (
-        <div style={{ color: color }}>
-          {rate} / {starLength}
-        </div>
-      )}
     </div>
   );
 }

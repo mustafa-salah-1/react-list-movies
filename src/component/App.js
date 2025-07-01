@@ -1,5 +1,5 @@
-import userEvent from "@testing-library/user-event";
 import { useEffect, useState } from "react";
+import StarRating from "./StarRating";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
@@ -119,17 +119,27 @@ function ShowMovie({ movieID }) {
       {isLoading ? (
         <Loader />
       ) : (
-        <div style={{ display: "flex", gap: "5px" }}>
-          <img
-            src={movie.Poster}
-            style={{ borderRadius: "10px" }}
-            width={150}
-            alt={movie.Title}
-          />
-          <div>
-            <h3>{movie.Title}</h3>
+        <>
+          <div style={{ display: "flex", gap: "5px" }}>
+            <img
+              src={movie.Poster}
+              style={{ borderRadius: "10px" }}
+              width={150}
+              alt={movie.Title}
+            />
+            <div>
+              <h3>{movie.Title}</h3>
+            </div>
           </div>
-        </div>
+          <div>
+            <StarRating
+              defaultRate={3}
+              starLength={10}
+              // color={"#ad1542"}
+              // removeNumberStars={true}
+            />
+          </div>
+        </>
       )}
     </div>
   );
