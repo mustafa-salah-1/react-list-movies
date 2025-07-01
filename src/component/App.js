@@ -8,9 +8,11 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isRate, setIsRate] = useState(false);
 
   function handleShowMovie(movieId) {
     setMovieId(() => movieId);
+    setIsRate(() => watched.some((movie) => movie.id === movieId));
   }
 
   function handleRemoveWatchedMovie(movieId) {
@@ -80,6 +82,7 @@ export default function App() {
         <Box movie={movieId} handleShowMovie={handleShowMovie}>
           {movieId ? (
             <ShowMovie
+              isRate={isRate}
               movieID={movieId}
               handleWatchedMoive={handleWatchedMoive}
             />
@@ -102,7 +105,7 @@ function Main({ children }) {
   return <main>{children}</main>;
 }
 
-function ShowMovie({ movieID, handleWatchedMoive }) {
+function ShowMovie({ movieID, handleWatchedMoive, isRate }) {
   const [movie, setMovie] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [star, setStar] = useState();
@@ -174,33 +177,39 @@ function ShowMovie({ movieID, handleWatchedMoive }) {
             </div>
           </div>
           <div style={{ marginBlock: "20px" }}>
-            <StarRating
-              defaultRate={movie.imdbRating}
-              starLength={10}
-              onClick={handleClickStar}
-            />
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              {star && (
-                <button
-                  onClick={handleAddMovieToList}
+            {!isRate ? (
+              <>
+                <StarRating
+                  defaultRate={movie.imdbRating}
+                  starLength={10}
+                  onClick={handleClickStar}
+                />
+                <div
                   style={{
-                    fontSize: "14px",
-                    backgroundColor: "yellow",
-                    color: "black",
-                    width: "auto",
-                    padding: "15px",
-                    borderRadius: "10px",
+                    display: "flex",
+                    justifyContent: "center",
                   }}
                 >
-                  + add to watched list
-                </button>
-              )}
-            </div>
+                  {star && (
+                    <button
+                      onClick={handleAddMovieToList}
+                      style={{
+                        fontSize: "14px",
+                        backgroundColor: "yellow",
+                        color: "black",
+                        width: "auto",
+                        padding: "15px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      + add to watched list
+                    </button>
+                  )}
+                </div>
+              </>
+            ) : (
+              <h2 style={{ backgroundColor: '#1a1a1d',paddingBlock: '5px',borderRadius: '10px', textAlign: 'center', fontWeight: '600' }}>You rated this movie</h2>
+            )}
           </div>
           <div
             style={{
