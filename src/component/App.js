@@ -13,6 +13,10 @@ export default function App() {
     setMovieId(() => movieId);
   }
 
+  function handleWatchedMoive(newWatched) {
+    setWatched((watched) => [...watched, newWatched]);
+  }
+
   useEffect(
     function () {
       async function fetchMovies() {
@@ -66,11 +70,14 @@ export default function App() {
 
         <Box movie={movieId} handleShowMovie={handleShowMovie}>
           {movieId ? (
-            <ShowMovie movieID={movieId} handleShowMovie={handleShowMovie} />
+            <ShowMovie
+              movieID={movieId}
+              handleWatchedMoive={handleWatchedMoive}
+            />
           ) : (
             <>
               <WatchedSummary watched={watched} />
-              <WatchedMoviesList />
+              <WatchedMoviesList watchedMovies={watched} />
             </>
           )}
         </Box>
@@ -83,10 +90,21 @@ function Main({ children }) {
   return <main>{children}</main>;
 }
 
-function ShowMovie({ movieID }) {
+function ShowMovie({ movieID, handleWatchedMoive }) {
   const [movie, setMovie] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [star, setStar] = useState();
+
+  function handleAddMovieToList() {
+    handleWatchedMoive({
+      id: movie.imdbID,
+      title: movie.Title,
+      poster: movie.Poster,
+      year: movie.Year,
+      rate: movie.imdbRating,
+      myRate: star,
+    });
+  }
 
   function handleClickStar(star) {
     setStar(() => star);
@@ -148,11 +166,16 @@ function ShowMovie({ movieID }) {
               defaultRate={movie.imdbRating}
               starLength={10}
               onClick={handleClickStar}
-              // removeNumberStars={true}
             />
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               {star && (
                 <button
+                  onClick={handleAddMovieToList}
                   style={{
                     fontSize: "14px",
                     backgroundColor: "yellow",
@@ -166,6 +189,15 @@ function ShowMovie({ movieID }) {
                 </button>
               )}
             </div>
+          </div>
+          <div
+            style={{
+              backgroundColor: "#1a1a1d",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            {movie.Plot}
           </div>
         </>
       )}
@@ -226,22 +258,25 @@ function WatchedSummary({ watched }) {
     </div>
   );
 }
-function WatchedMoviesList() {
+function WatchedMoviesList({ watchedMovies }) {
   return (
     <div className="list">
-      <WatchedItem />
+      {watchedMovies &&
+        watchedMovies.map((movie) => (
+          <WatchedItem key={movie.id} movie={movie} />
+        ))}
     </div>
   );
 }
-function WatchedItem() {
+function WatchedItem({ movie }) {
   return (
     <div className="item">
-      <div>
-        <img src="logo512.png" width={55} alt="test" />
+        <div>
+        <img src={movie.poster} width={55} alt={movie.title} />
       </div>
       <div>
-        <h2>name</h2>
-        <p>des</p>
+        <h3>{movie.title}</h3>
+        <p>{movie.year}</p>
       </div>
     </div>
   );
