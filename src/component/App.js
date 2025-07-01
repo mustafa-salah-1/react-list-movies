@@ -1,17 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function App() {
+  const [movies, setMovies] = useState([]);
+  // const [watched, setWatched] = useState([]);
+  const [search, setSearch] = useState("avengers");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(function () {
+    async function fetchMovies() {
+      try {
+        setIsLoading(true);
+
+        const result = await fetch(
+          `https://www.omdbapi.com/?apikey=4b839182&s=${search}`
+        );
+
+        if (!result.ok) throw new Error("fetch movies falied");
+
+        const data = await result.json(); 
+
+        if (data.Response === "False") throw new Error("movie not found!");
+
+        setMovies(data.Search);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchMovies();
+  }, []);
+
   return (
     <div className="app">
       <Navbar>
-        <Logo />
-        <Search />
-        <Result />
+        <Search onEvent={setSearch} />
+        <Result movies={movies} />
       </Navbar>
 
       <Main>
         <Box>
-          <MovieList />
+          {isLoading && <Loader />}
+          {!isLoading && !error && movies && <MovieList movies={movies} />}
+          {error && <ErrorMessage error={error} />}
         </Box>
 
         <Box>
@@ -39,22 +71,24 @@ function Box({ children }) {
     </div>
   );
 }
-function MovieList() {
+function MovieList({ movies }) {
   return (
     <div className="list">
-      <ListItem />
+      {movies.map((movie) => (
+        <ListItem key={movie.imdbID} movie={movie} />
+      ))}
     </div>
   );
 }
-function ListItem() {
+function ListItem({ movie }) {
   return (
     <div className="item">
       <div>
-        <img src="logo512.png" width={55} alt="test" />
+        <img src={movie.Poster} width={55} alt={movie.Title} />
       </div>
       <div>
-        <h2>name</h2>
-        <p>des</p>
+        <h2>{movie.Title}</h2>
+        <p>{movie.Year}</p>
       </div>
     </div>
   );
@@ -83,8 +117,27 @@ function WatchedItem() {
   );
 }
 
+function Loader() {
+  return (
+    <div style={{ padding: "5px", textAlign: "center", fontSize: "22px" }}>
+      Loading...
+    </div>
+  );
+}
+function ErrorMessage({ error }) {
+  return (
+    <div style={{ padding: "5px", textAlign: "center", fontSize: "22px" }}>
+      {error}
+    </div>
+  );
+}
+
 function Navbar({ children }) {
-  return <nav> {children}</nav>;
+  return (
+    <nav>
+      <Logo /> {children}
+    </nav>
+  );
 }
 function Logo() {
   return (
@@ -95,19 +148,23 @@ function Logo() {
   );
 }
 
-function Search() {
+function Search({ onEvent }) {
   return (
     <div>
-      <input type="text" placeholder="Search..." />
+      <input
+        type="text"
+        onChange={(e) => onEvent(() => e.target.value)}
+        placeholder="Search..."
+      />
     </div>
   );
 }
 
-function Result() {
+function Result({ movies }) {
   return (
     <div>
       <p>
-        Result <strong>X</strong>
+        Result <strong>{movies && movies.length}</strong>
       </p>
     </div>
   );

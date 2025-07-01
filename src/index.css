@@ -25,6 +25,8 @@ nav {
   justify-content: space-between;
   align-items: center;
   background-color: #5f2eea;
+  max-width: 1000px;
+  margin-inline:auto;
 }
 nav div {
   display: flex;
@@ -51,6 +53,8 @@ main {
   display: flex;
   justify-content: space-between;
   padding-inline: 40px;
+  max-width: 1000px;
+  margin-inline: auto;
 }
 main .movie {
   width: 100%;
