@@ -3,34 +3,44 @@ import { useEffect, useState } from "react";
 export default function App() {
   const [movies, setMovies] = useState([]);
   // const [watched, setWatched] = useState([]);
-  const [search, setSearch] = useState("avengers");
+  const [search, setSearch] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(function () {
-    async function fetchMovies() {
-      try {
-        setIsLoading(true);
+  useEffect(
+    function () {
+      async function fetchMovies() {
+        try {
+          setIsLoading(true);
+          setError("");
+          const result = await fetch(
+            `https://www.omdbapi.com/?apikey=4b839182&s=${search}`
+          );
 
-        const result = await fetch(
-          `https://www.omdbapi.com/?apikey=4b839182&s=${search}`
-        );
+          if (!result.ok) throw new Error("fetch movies falied");
 
-        if (!result.ok) throw new Error("fetch movies falied");
+          const data = await result.json();
 
-        const data = await result.json(); 
+          if (data.Response === "False") throw new Error("movie not found!");
 
-        if (data.Response === "False") throw new Error("movie not found!");
-
-        setMovies(data.Search);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
+          setMovies(data.Search);
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setIsLoading(false);
+        }
       }
-    }
-    fetchMovies();
-  }, []);
+
+      if (search.length < 3) {
+        setError("");
+        setMovies([]);
+        return;
+      }
+
+      fetchMovies();
+    },
+    [search]
+  );
 
   return (
     <div className="app">
