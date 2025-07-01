@@ -51,15 +51,14 @@ nav input::placeholder {
 
 main {
   display: flex;
-  justify-content: space-between;
-  padding-inline: 40px;
-  max-width: 1000px;
+  justify-content: space-between; 
+  max-width: 1050px;
   margin-inline: auto;
 }
 main .movie {
   width: 100%;
   min-height: 400px;
-  margin: 15px;
+  margin: 10px;
   padding-block: 5px;
   padding-inline: 25px;
   border-radius: 10px;

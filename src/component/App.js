@@ -1,15 +1,16 @@
+import userEvent from "@testing-library/user-event";
 import { useEffect, useState } from "react";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
-  const [showMovie, setShowMovie] = useState(null);
+  const [movieId, setMovieId] = useState(null);
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleShowMovie(movie) {
-    setShowMovie(() => movie);
+  function handleShowMovie(movieId) {
+    setMovieId(() => movieId);
   }
 
   useEffect(
@@ -63,9 +64,9 @@ export default function App() {
           {error && <ErrorMessage error={error} />}
         </Box>
 
-        <Box movie={showMovie} handleShowMovie={handleShowMovie}>
-          {showMovie ? (
-            <ShowMovie movie={showMovie} handleShowMovie={handleShowMovie} />
+        <Box movie={movieId} handleShowMovie={handleShowMovie}>
+          {movieId ? (
+            <ShowMovie movieID={movieId} handleShowMovie={handleShowMovie} />
           ) : (
             <>
               <WatchedSummary watched={watched} />
@@ -82,21 +83,54 @@ function Main({ children }) {
   return <main>{children}</main>;
 }
 
-function ShowMovie({ movie }) {
-  console.log(movie);
+function ShowMovie({ movieID }) {
+  const [movie, setMovie] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(
+    function () {
+      async function getMovieById() {
+        try {
+          setIsLoading(true);
+          const result = await fetch(
+            `https://www.omdbapi.com/?apikey=4b839182&i=${movieID}`
+          );
+
+          if (!result.ok) throw new Error("fetch movies falied");
+
+          const data = await result.json();
+
+          if (data.Response === "False") throw new Error("movie not found!");
+
+          setMovie(data);
+        } catch (err) {
+          console.log(err.message);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      getMovieById();
+    },
+    [movieID]
+  );
+
   return (
     <div>
-      <div style={{ display: "flex", gap: "5px" }}>
-        <img
-          src={movie.Poster}
-          style={{ borderRadius: "10px" }}
-          width={100}
-          alt={movie.Title}
-        />
-        <div>
-          <h3>{movie.Title}</h3>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div style={{ display: "flex", gap: "5px" }}>
+          <img
+            src={movie.Poster}
+            style={{ borderRadius: "10px" }}
+            width={150}
+            alt={movie.Title}
+          />
+          <div>
+            <h3>{movie.Title}</h3>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -135,7 +169,7 @@ function MovieList({ movies, handleShowMovie }) {
 }
 function ListItem({ movie, handleShowMovie }) {
   return (
-    <div className="item" onClick={() => handleShowMovie(movie)}>
+    <div className="item" onClick={() => handleShowMovie(movie.imdbID)}>
       <div>
         <img src={movie.Poster} width={55} alt={movie.Title} />
       </div>
