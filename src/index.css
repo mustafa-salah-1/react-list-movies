@@ -57,7 +57,7 @@ main {
 }
 main .movie {
   width: 100%;
-  min-height: 400px;
+  min-height: 500px;
   margin: 10px;
   padding-block: 5px;
   padding-inline: 25px;
@@ -73,11 +73,10 @@ main .movie .button {
 }
 main .movie button {
   background-color: #1a1a1d;
-  border-radius: 50%;
+  border-radius: 10px;
   border: none;
-  width: 40px;
+  width: 30px;
   color: white;
-  font-size: 22px;
   cursor: pointer;
 }
 main .movie button:hover {
@@ -94,6 +93,9 @@ main .movie button:hover {
   padding-inline: 10px;
   transition: 0.2s;
   cursor: pointer;
+}
+.movie .list .item button:hover {
+  background-color: red;
 }
 .movie .list .item:hover {
   background-color: #484848;

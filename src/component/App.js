@@ -230,7 +230,7 @@ function Box({ children, movie = null, handleShowMovie = null }) {
         </div>
 
         <button onClick={() => setIsOpen((isOpen) => !isOpen)}>
-          {isOpen ? "-" : "+"}
+          {isOpen ? `x` : "+"}
         </button>
       </div>
       {isOpen && children}
