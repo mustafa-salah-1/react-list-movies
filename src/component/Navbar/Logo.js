@@ -1,9 +1,7 @@
-
 export default function Logo() {
   return (
     <div>
-      <img src="logo192.png" width={35} alt="logo" />
-      <span>Movies</span>
+      <span style={{ fontSize: "40px" }}>🍿</span>Movies
     </div>
   );
 }
