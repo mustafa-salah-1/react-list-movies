@@ -208,7 +208,17 @@ function ShowMovie({ movieID, handleWatchedMoive, isRate }) {
                 </div>
               </>
             ) : (
-              <h2 style={{ backgroundColor: '#1a1a1d',paddingBlock: '5px',borderRadius: '10px', textAlign: 'center', fontWeight: '600' }}>You rated this movie</h2>
+              <h3
+                style={{
+                  backgroundColor: "#1a1a1d",
+                  paddingBlock: "5px",
+                  borderRadius: "10px",
+                  textAlign: "center",
+                  fontWeight: "600",
+                }}
+              >
+                You rated this movie
+              </h3>
             )}
           </div>
           <div
@@ -290,8 +300,8 @@ function WatchedSummary({ watched }) {
     <div>
       <h3>Movies you watched</h3>
       <div>
-        #️⃣ {watched.length} movies ⭐{returnImdbRate()} 🌟 {returnMyRate()} ⌛
-        {returnTime()}
+        #️⃣ {watched.length} movies ⭐{returnImdbRate().toFixed(1)} 🌟{" "}
+        {returnMyRate().toFixed(1)} ⌛{returnTime()} min
       </div>
     </div>
   );
@@ -322,7 +332,7 @@ function WatchedItem({ movie, handleRemove }) {
         <div>
           <h3>{movie.title}</h3>
           <p>
-            {movie.year} ⭐ {movie.rate} 🌟 {movie.myRate}
+            {movie.year} ⭐ {movie.rate} 🌟 {movie.myRate} ⌛ {movie.time} min
           </p>
         </div>
       </div>
