@@ -13,8 +13,17 @@ export default function App() {
     setMovieId(() => movieId);
   }
 
+  function handleRemoveWatchedMovie(movieId) {
+    setWatched((watched) => watched.filter((movie) => movie.id !== movieId));
+  }
+
   function handleWatchedMoive(newWatched) {
-    setWatched((watched) => [...watched, newWatched]);
+    setWatched((watched) =>
+      watched.some((movie) => movie.id === newWatched.id)
+        ? watched
+        : [...watched, newWatched]
+    );
+    setMovieId(null);
   }
 
   useEffect(
@@ -77,7 +86,10 @@ export default function App() {
           ) : (
             <>
               <WatchedSummary watched={watched} />
-              <WatchedMoviesList watchedMovies={watched} />
+              <WatchedMoviesList
+                handleRemove={handleRemoveWatchedMovie}
+                watchedMovies={watched}
+              />
             </>
           )}
         </Box>
@@ -240,12 +252,17 @@ function MovieList({ movies, handleShowMovie }) {
 function ListItem({ movie, handleShowMovie }) {
   return (
     <div className="item" onClick={() => handleShowMovie(movie.imdbID)}>
-      <div>
-        <img src={movie.Poster} width={55} alt={movie.Title} />
-      </div>
-      <div>
-        <h3>{movie.Title}</h3>
-        <p>{movie.Year}</p>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <img
+          src={movie.Poster}
+          style={{ borderRadius: "5px" }}
+          width={55}
+          alt={movie.Title}
+        />
+        <div>
+          <h3>{movie.Title}</h3>
+          <p>{movie.Year}</p>
+        </div>
       </div>
     </div>
   );
@@ -258,25 +275,39 @@ function WatchedSummary({ watched }) {
     </div>
   );
 }
-function WatchedMoviesList({ watchedMovies }) {
+function WatchedMoviesList({ watchedMovies, handleRemove }) {
   return (
     <div className="list">
       {watchedMovies &&
         watchedMovies.map((movie) => (
-          <WatchedItem key={movie.id} movie={movie} />
+          <WatchedItem
+            key={movie.id}
+            handleRemove={handleRemove}
+            movie={movie}
+          />
         ))}
     </div>
   );
 }
-function WatchedItem({ movie }) {
+function WatchedItem({ movie, handleRemove }) {
   return (
     <div className="item">
+      <div style={{ display: "flex", gap: "10px" }}>
+        <img
+          src={movie.poster}
+          style={{ borderRadius: "5px" }}
+          width={55}
+          alt={movie.title}
+        />
         <div>
-        <img src={movie.poster} width={55} alt={movie.title} />
+          <h3>{movie.title}</h3>
+          <p>
+            {movie.year} ⭐ {movie.rate} 🌟 {movie.myRate}
+          </p>
+        </div>
       </div>
       <div>
-        <h3>{movie.title}</h3>
-        <p>{movie.year}</p>
+        <button onClick={() => handleRemove(movie.id)}>&times;</button>
       </div>
     </div>
   );
