@@ -161,8 +161,7 @@ function ShowMovie({ movieID, handleWatchedMoive }) {
           <div style={{ display: "flex", gap: "5px" }}>
             <img
               src={movie.Poster}
-              style={{ borderRadius: "10px" }}
-              width={150}
+              style={{ borderRadius: "10px", width: "170px" }}
               alt={movie.Title}
             />
             <div>
@@ -257,7 +256,6 @@ function ListItem({ movie, handleShowMovie }) {
         <img
           src={movie.Poster}
           style={{ borderRadius: "5px" }}
-          width={55}
           alt={movie.Title}
         />
         <div>
@@ -310,7 +308,6 @@ function WatchedItem({ movie, handleRemove }) {
         <img
           src={movie.poster}
           style={{ borderRadius: "5px" }}
-          width={55}
           alt={movie.title}
         />
         <div>
