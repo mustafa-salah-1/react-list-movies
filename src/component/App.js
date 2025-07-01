@@ -97,7 +97,7 @@ function ListItem({ movie }) {
         <img src={movie.Poster} width={55} alt={movie.Title} />
       </div>
       <div>
-        <h2>{movie.Title}</h2>
+        <h3>{movie.Title}</h3>
         <p>{movie.Year}</p>
       </div>
     </div>
