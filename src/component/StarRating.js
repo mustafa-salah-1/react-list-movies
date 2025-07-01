@@ -17,14 +17,16 @@ export default function StarRating({
   defaultRate = 0,
   color = "#fff",
   removeNumberStars = false,
+  onClick = false,
 }) {
   const [rate, setRate] = useState(defaultRate);
   const [rateHover, setRateHover] = useState(rate);
   function handleRating(rating) {
     setRate(rating);
+    onClick(rating);
   }
   function handleHoverRating(ratingHover) {
-    setRateHover(ratingHover); 
+    setRateHover(ratingHover);
   }
   function handleLeaveRating(ratingLeave) {
     setRateHover(ratingLeave);

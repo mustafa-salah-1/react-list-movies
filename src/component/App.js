@@ -86,6 +86,11 @@ function Main({ children }) {
 function ShowMovie({ movieID }) {
   const [movie, setMovie] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [star, setStar] = useState();
+
+  function handleClickStar(star) {
+    setStar(() => star);
+  }
 
   useEffect(
     function () {
@@ -109,6 +114,8 @@ function ShowMovie({ movieID }) {
           setIsLoading(false);
         }
       }
+
+      setStar(null);
       getMovieById();
     },
     [movieID]
@@ -129,15 +136,36 @@ function ShowMovie({ movieID }) {
             />
             <div>
               <h3>{movie.Title}</h3>
+              <p>
+                {movie.Released} | {movie.Runtime}
+              </p>
+              <p>{movie.Genre}</p>
+              <p>⭐ {movie.imdbRating}</p>
             </div>
           </div>
-          <div>
+          <div style={{ marginBlock: "20px" }}>
             <StarRating
-              defaultRate={3}
+              defaultRate={movie.imdbRating}
               starLength={10}
-              // color={"#ad1542"}
+              onClick={handleClickStar}
               // removeNumberStars={true}
             />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              {star && (
+                <button
+                  style={{
+                    fontSize: "14px",
+                    backgroundColor: "yellow",
+                    color: "black",
+                    width: "auto",
+                    padding: "15px",
+                    borderRadius: "10px",
+                  }}
+                >
+                  + add to watched list
+                </button>
+              )}
+            </div>
           </div>
         </>
       )}

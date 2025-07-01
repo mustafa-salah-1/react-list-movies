@@ -75,9 +75,7 @@ main .movie button {
   background-color: #1a1a1d;
   border-radius: 50%;
   border: none;
-  width: 40px;
-  padding-inline: 10px;
-  padding-block: 8px;
+  width: 40px; 
   color: white;
   font-size: 22px;
   cursor: pointer;
