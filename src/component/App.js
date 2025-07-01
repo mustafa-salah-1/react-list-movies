@@ -112,6 +112,7 @@ function ShowMovie({ movieID, handleWatchedMoive }) {
       id: movie.imdbID,
       title: movie.Title,
       poster: movie.Poster,
+      time: movie.Runtime.replace(" min", ""),
       year: movie.Year,
       rate: movie.imdbRating,
       myRate: star,
@@ -268,10 +269,23 @@ function ListItem({ movie, handleShowMovie }) {
   );
 }
 function WatchedSummary({ watched }) {
+  function returnImdbRate() {
+    return watched.reduce((sum, movie) => sum + Number(movie.rate), 0);
+  }
+  function returnMyRate() {
+    return watched.reduce((sum, movie) => sum + Number(movie.myRate), 0);
+  }
+  function returnTime() {
+    return watched.reduce((sum, movie) => sum + Number(movie.time), 0);
+  }
+
   return (
     <div>
       <h3>Movies you watched</h3>
-      <div>#️⃣ {watched.length} movies ⭐ 0 ⌛ 0 min</div>
+      <div>
+        #️⃣ {watched.length} movies ⭐{returnImdbRate()} 🌟 {returnMyRate()} ⌛
+        {returnTime()}
+      </div>
     </div>
   );
 }
