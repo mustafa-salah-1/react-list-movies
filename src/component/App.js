@@ -17,12 +17,16 @@ export default function App() {
   const [isRate, setIsRate] = useState(false);
   const [watched, setWatched] = useState(function () {
     const data = localStorage.getItem("watched");
-    return JSON.parse(data);
+    return data ? JSON.parse(data) : [];
   });
 
   function handleShowMovie(movieId) {
     setMovieId(() => movieId);
-    setIsRate(() => watched.some((movie) => movie.id === movieId));
+    setIsRate(() =>
+      Array.isArray(watched)
+        ? watched.some((movie) => movie.id === movieId)
+        : false
+    );
   }
 
   function handleRemoveWatchedMovie(movieId) {
@@ -31,9 +35,9 @@ export default function App() {
 
   function handleWatchedMoive(newWatched) {
     setWatched((watched) =>
-      watched.some((movie) => movie.id === newWatched.id)
+      Array.isArray(watched) && watched.some((movie) => movie.id === newWatched.id)
         ? watched
-        : [...watched, newWatched]
+        : [...(Array.isArray(watched) ? watched : []), newWatched]
     );
     setMovieId(null);
   }
