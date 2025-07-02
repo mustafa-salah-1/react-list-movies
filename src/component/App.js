@@ -82,7 +82,7 @@ export default function App() {
   return (
     <div className="app">
       <Navbar>
-        <Search onEvent={setSearch} />
+        <Search search={search} onEvent={setSearch} />
         <Result movies={movies} />
       </Navbar>
 
