@@ -7,6 +7,7 @@ export default function ShowMovie({
   setError,
   handleWatchedMoive,
   isRate,
+  handleShowMovie,
 }) {
   const [movie, setMovie] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -76,6 +77,22 @@ export default function ShowMovie({
       };
     },
     [movie]
+  );
+
+  useEffect(
+    function () {
+      function callBack(e) {
+        if (e.code === "Escape") {
+          handleShowMovie(null);
+        }
+      }
+      document.addEventListener("keydown", callBack);
+
+      return function () {
+        document.removeEventListener("keydown", callBack);
+      };
+    },
+    [handleShowMovie]
   );
 
   return (

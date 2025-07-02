@@ -68,7 +68,7 @@ export default function App() {
       fetchMovies();
     },
     [search]
-  );
+  ); 
 
   return (
     <div className="app">
@@ -93,6 +93,7 @@ export default function App() {
               isRate={isRate}
               movieID={movieId}
               handleWatchedMoive={handleWatchedMoive}
+              handleShowMovie={handleShowMovie}
             />
           ) : (
             <>
