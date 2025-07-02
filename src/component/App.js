@@ -89,6 +89,7 @@ export default function App() {
         <Box movie={movieId} handleShowMovie={handleShowMovie}>
           {movieId ? (
             <ShowMovie
+              setError={setError}
               isRate={isRate}
               movieID={movieId}
               handleWatchedMoive={handleWatchedMoive}

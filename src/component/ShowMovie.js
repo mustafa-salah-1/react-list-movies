@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import StarRating from "./StarRating";
 import Loader from "./Loader";
 
-export default function ShowMovie({ movieID, handleWatchedMoive, isRate }) {
+export default function ShowMovie({
+  movieID,
+  setError,
+  handleWatchedMoive,
+  isRate,
+}) {
   const [movie, setMovie] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [star, setStar] = useState();
@@ -25,11 +30,13 @@ export default function ShowMovie({ movieID, handleWatchedMoive, isRate }) {
 
   useEffect(
     function () {
+      const controller = new AbortController();
       async function getMovieById() {
         try {
           setIsLoading(true);
           const result = await fetch(
-            `https://www.omdbapi.com/?apikey=4b839182&i=${movieID}`
+            `https://www.omdbapi.com/?apikey=4b839182&i=${movieID}`,
+            { signal: controller.signal }
           );
 
           if (!result.ok) throw new Error("fetch movies falied");
@@ -37,10 +44,12 @@ export default function ShowMovie({ movieID, handleWatchedMoive, isRate }) {
           const data = await result.json();
 
           if (data.Response === "False") throw new Error("movie not found!");
-
+          setError("");
           setMovie(data);
         } catch (err) {
-          console.log(err.message);
+          if (err.name !== "AbortError") {
+            setError(() => err.message);
+          }
         } finally {
           setIsLoading(false);
         }
@@ -48,8 +57,12 @@ export default function ShowMovie({ movieID, handleWatchedMoive, isRate }) {
 
       setStar(null);
       getMovieById();
+
+      return function () {
+        controller.abort();
+      };
     },
-    [movieID]
+    [movieID, setError]
   );
 
   useEffect(
