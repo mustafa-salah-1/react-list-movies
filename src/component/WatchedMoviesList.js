@@ -29,7 +29,15 @@ function WatchedItem({ movie, handleRemove }) {
         </div>
       </div>
       <div>
-        <button onClick={() => handleRemove(movie.id)}>&times;</button>
+        <button
+          onClick={() =>
+            handleRemove((watched) =>
+              watched.filter((item) => item.id !== movie.id)
+            )
+          }
+        >
+          &times;
+        </button>
       </div>
     </div>
   );

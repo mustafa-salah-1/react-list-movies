@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
 import StarRating from "./StarRating";
 import Loader from "./Loader";
+import { useKey } from "./CustomHooks/useKey";
+import { useTitle } from "./CustomHooks/useTitle";
+import { useMovieId } from "./CustomHooks/useMovieId";
 
 export default function ShowMovie({
   movieID,
-  setError,
   handleWatchedMoive,
   isRate,
   handleShowMovie,
 }) {
-  const [movie, setMovie] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [star, setStar] = useState();
+  const [movie, isLoading, error, star, setStar] = useMovieId(movieID);
 
   function handleAddMovieToList() {
     handleWatchedMoive({
@@ -29,76 +28,15 @@ export default function ShowMovie({
     setStar(() => star);
   }
 
-  useEffect(
-    function () {
-      const controller = new AbortController();
-      async function getMovieById() {
-        try {
-          setIsLoading(true);
-          const result = await fetch(
-            `https://www.omdbapi.com/?apikey=4b839182&i=${movieID}`,
-            { signal: controller.signal }
-          );
-
-          if (!result.ok) throw new Error("fetch movies falied");
-
-          const data = await result.json();
-
-          if (data.Response === "False") throw new Error("movie not found!");
-          setError("");
-          setMovie(data);
-        } catch (err) {
-          if (err.name !== "AbortError") {
-            setError(() => err.message);
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      setStar(null);
-      getMovieById();
-
-      return function () {
-        controller.abort();
-      };
-    },
-    [movieID, setError]
-  );
-
-  useEffect(
-    function () {
-      if (!movie.Title) return;
-
-      document.title = "Moive | " + movie.Title;
-
-      return function () {
-        document.title = "List Movies";
-      };
-    },
-    [movie]
-  );
-
-  useEffect(
-    function () {
-      function callBack(e) {
-        if (e.code === "Escape") {
-          handleShowMovie(null);
-        }
-      }
-      document.addEventListener("keydown", callBack);
-
-      return function () {
-        document.removeEventListener("keydown", callBack);
-      };
-    },
-    [handleShowMovie]
-  );
+  useTitle(movie.Title);
+  useKey("Escape", handleShowMovie);
 
   return (
     <div>
       {isLoading ? (
         <Loader />
+      ) : error ? (
+        error
       ) : (
         <>
           <div style={{ display: "flex", gap: "5px" }}>

@@ -1,22 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { useKey } from "../CustomHooks/useKey";
 
 export default function Search({ search, onEvent }) {
   const inputEl = useRef(null);
 
-  useEffect(function () {
-    function callBack(e) {
-      if (document.activeElement === inputEl.current) return;
-
-      if (e.code === "Enter") {
-        onEvent("");
-        inputEl.current.focus();
-      }
-    }
-
-    document.addEventListener("keydown", callBack);
-
-    return () => document.addEventListener("keydown", callBack);
-  }, [onEvent]);
+  useKey("Enter", function () {
+    onEvent("");
+    inputEl.current.focus();
+  }); 
 
   return (
     <div>

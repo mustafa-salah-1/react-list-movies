@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ShowMovie from "./ShowMovie";
 import Loader from "./Loader";
 import Navbar from "./Navbar/Navbar";
@@ -7,18 +7,16 @@ import Result from "./Navbar/Result";
 import MovieList from "./MovieList";
 import WatchedMoviesList from "./WatchedMoviesList";
 import WatchedSummary from "./WatchedSummary";
+import { useMovie } from "./CustomHooks/useMovie";
+import { useLocalStorage } from "./CustomHooks/useLocalStorage";
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
   const [movieId, setMovieId] = useState(null);
   const [search, setSearch] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isRate, setIsRate] = useState(false);
-  const [watched, setWatched] = useState(function () {
-    const data = localStorage.getItem("watched");
-    return data ? JSON.parse(data) : [];
-  });
+  const [watched, setWatched] = useLocalStorage([], "watched");
+
+  const { movies, isLoading, error } = useMovie(search);
 
   function handleShowMovie(movieId) {
     setMovieId(() => movieId);
@@ -29,59 +27,15 @@ export default function App() {
     );
   }
 
-  function handleRemoveWatchedMovie(movieId) {
-    setWatched((watched) => watched.filter((movie) => movie.id !== movieId));
-  }
-
   function handleWatchedMoive(newWatched) {
     setWatched((watched) =>
-      Array.isArray(watched) && watched.some((movie) => movie.id === newWatched.id)
+      Array.isArray(watched) &&
+      watched.some((movie) => movie.id === newWatched.id)
         ? watched
         : [...(Array.isArray(watched) ? watched : []), newWatched]
     );
     setMovieId(null);
   }
-
-  useEffect(
-    function () {
-      async function fetchMovies() {
-        try {
-          setIsLoading(true);
-          setError("");
-          const result = await fetch(
-            `https://www.omdbapi.com/?apikey=4b839182&s=${search}`
-          );
-
-          if (!result.ok) throw new Error("fetch movies falied");
-
-          const data = await result.json();
-
-          if (data.Response === "False") throw new Error("movie not found!");
-
-          setMovies(data.Search);
-        } catch (error) {
-          setError(error.message);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      if (search.length < 3) {
-        setError("");
-        setMovies([]);
-        return;
-      }
-
-      fetchMovies();
-    },
-    [search]
-  );
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
 
   return (
     <div className="app">
@@ -102,7 +56,6 @@ export default function App() {
         <Box movie={movieId} handleShowMovie={handleShowMovie}>
           {movieId ? (
             <ShowMovie
-              setError={setError}
               isRate={isRate}
               movieID={movieId}
               handleWatchedMoive={handleWatchedMoive}
@@ -112,7 +65,7 @@ export default function App() {
             <>
               <WatchedSummary watched={watched} />
               <WatchedMoviesList
-                handleRemove={handleRemoveWatchedMovie}
+                handleRemove={setWatched}
                 watchedMovies={watched}
               />
             </>
