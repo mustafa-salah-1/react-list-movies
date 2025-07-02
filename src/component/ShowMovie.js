@@ -52,6 +52,19 @@ export default function ShowMovie({ movieID, handleWatchedMoive, isRate }) {
     [movieID]
   );
 
+  useEffect(
+    function () {
+      if (!movie.Title) return;
+
+      document.title = "Moive | " + movie.Title;
+
+      return function () {
+        document.title = "List Movies";
+      };
+    },
+    [movie]
+  );
+
   return (
     <div>
       {isLoading ? (
