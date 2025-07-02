@@ -16,7 +16,7 @@ export default function Search({ search, onEvent }) {
     document.addEventListener("keydown", callBack);
 
     return () => document.addEventListener("keydown", callBack);
-  }, []);
+  }, [onEvent]);
 
   return (
     <div>
