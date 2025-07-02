@@ -48,6 +48,11 @@ nav input {
 nav input::placeholder {
   color: white;
 }
+nav input:focus {
+  color: white;
+  translate: 0px -3px ;
+  transition: 0.3s;
+}
 
 main {
   display: flex;

@@ -13,9 +13,9 @@ export default function WatchedSummary({ watched }) {
     <div>
       <h3>Movies you watched</h3>
       <div>
-        #️⃣ {watched.length} movies ⭐{returnImdbRate().toFixed(1)} 🌟{" "}
+        #️⃣ {watched && watched.length} movies ⭐{returnImdbRate().toFixed(1)} 🌟{" "}
         {returnMyRate().toFixed(1)} ⌛{returnTime()} min
       </div>
     </div>
   );
-} 
+}
